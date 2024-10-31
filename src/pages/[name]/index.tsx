@@ -101,7 +101,8 @@ const Page = () => {
     }
   };
 
-  const handleClaimGift = () => {
+  const handleClaimGift = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     if (mintStatus === GIFT_STATUS.NOT_STARTED) {
       fundWalletAndMintNFT();
     }
@@ -139,7 +140,7 @@ const Page = () => {
           mintStatus === GIFT_STATUS.CHECKING) && (
           <button
             onClick={handleClaimGift}
-            className="bg-highlight text-secondary text-base sm:text-lg font-bold py-2 sm:py-3 px-6 sm:px-8 rounded-full shadow-lg transform transition hover:scale-105 hover:shadow-2xl disabled:bg-grey-400"
+            className="cursor-pointer bg-highlight text-secondary text-base sm:text-lg font-bold py-2 sm:py-3 px-6 sm:px-8 rounded-full shadow-lg transform transition hover:scale-105 hover:shadow-2xl disabled:bg-grey-400"
             disabled={mintStatus === GIFT_STATUS.CHECKING}
           >
             Claim Your Gift
