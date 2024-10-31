@@ -116,8 +116,8 @@ const Page = () => {
       {/* <HeroImage /> */}
 
       <div
-        className="flex flex-col items-center justify-center min-h-screen  text-lightGray px-4 py-8 bg-cover bg-no-repeat"
-        style={{ backgroundImage: "url(/bg.jpg)" }}
+        className="flex flex-col items-center justify-center min-h-screen  text-lightGray px-4 py-8 bg-primary bg-cover bg-no-repeat"
+        // style={{ backgroundImage: "url(/bg.jpg)" }}
       >
         <Image
           src="/nft.jpeg"
