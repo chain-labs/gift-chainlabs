@@ -3,7 +3,6 @@ import abi from "@/abi.json";
 import { ethers, Wallet } from "ethers";
 import { contractAddress, newTokenUri, sender_private_key } from "@/constant";
 import Image from "next/image";
-import { formatEther } from "ethers/lib/utils";
 
 const GIFT_STATUS = {
   CHECKING: "checking",
