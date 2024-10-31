@@ -14,6 +14,7 @@ export default function Document() {
           href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,100..900;1,100..900&display=swap"
           rel="stylesheet"
         />
+        <link rel="icon" href="/favicon.png" />
       </Head>
       <body className="antialiased">
         <Main />

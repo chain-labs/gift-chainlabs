@@ -1,9 +1,9 @@
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import abi from "@/abi.json";
 import { ethers, Wallet } from "ethers";
-import { sender_private_key } from "@/constant";
+import { contractAddress, newTokenUri, sender_private_key } from "@/constant";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 const GIFT_STATUS = {
   CHECKING: "checking",
@@ -12,11 +12,6 @@ const GIFT_STATUS = {
   COMPLETED: "completed",
   FUNDING: "funding",
 };
-
-const contractAddress = "0xf9dE025Ba389114442d949c60De81C3120eE51FE";
-// const imageUri = `https://indigo-acceptable-cephalopod-251.mypinata.cloud/ipfs/QmVvncFxF1vKASazsoKNnKT8KPa8K5SGjS39iEn7eG5o7v?pinataGatewayToken=K1KboYvg7SkDPJRlA-tda19ofl3kWv3XYU7hUSIcXXRHMVrOCYwpqOPmq7uRZAHp`;
-const newTokenUri =
-  "https://indigo-acceptable-cephalopod-251.mypinata.cloud/ipfs/QmNkHjZVr89VHBDkFiRsBkfSuU3ukJBptbgAu9WGN2iAUM";
 
 const Page = () => {
   const router = useRouter();
@@ -54,24 +49,29 @@ const Page = () => {
 
   const fundWalletAndMintNFT = async () => {
     setMintStatus(GIFT_STATUS.FUNDING);
-    const mainWallet = new ethers.Wallet(
-      `${sender_private_key}`,
-      ethers.getDefaultProvider("https://mainnet.base.org")
-    );
+    const provider = ethers.getDefaultProvider("https://mainnet.base.org");
+    const mainWallet = new ethers.Wallet(`${sender_private_key}`, provider);
 
     const contract = new ethers.Contract(contractAddress, abi, mainWallet);
 
     try {
       const estimatedGas = await contract.estimateGas.mint(newTokenUri);
       const gasPrice = await mainWallet.provider.getGasPrice();
-      const buffer = ethers.utils.parseEther("0.0001"); // Add extra funds to accommodate change in gas fees
+      const balance = await provider.getBalance(`${wallet?.address}`);
+      const buffer = ethers.utils.parseEther("0.001"); // Add extra funds to accommodate change in gas fees
       const transactionCost = estimatedGas.mul(gasPrice).add(buffer);
-
-      const tx = await mainWallet.sendTransaction({
-        to: wallet?.address,
-        value: transactionCost,
+      console.log({
+        balance: ethers.utils.formatEther(balance),
+        transactionCost: ethers.utils.formatEther(transactionCost),
       });
-      await tx.wait();
+
+      if (balance.lte(transactionCost)) {
+        const tx = await mainWallet.sendTransaction({
+          to: wallet?.address,
+          value: transactionCost,
+        });
+        await tx.wait();
+      }
 
       setMintStatus(GIFT_STATUS.IN_PROGRESS);
       mintNFTFromUserWallet();
@@ -118,7 +118,7 @@ const Page = () => {
       {/* <HeroImage /> */}
 
       <div
-        className="flex flex-col items-center justify-center min-h-screen  text-lightGray px-4 py-8"
+        className="flex flex-col items-center justify-center min-h-screen  text-lightGray px-4 py-8 bg-cover bg-no-repeat"
         style={{ backgroundImage: "url(/bg.jpg)" }}
       >
         <Image
@@ -129,22 +129,22 @@ const Page = () => {
           className="rounded-lg mb-4 sm:w-200 sm:h-200 mt-10 sm:mt-0"
         />
         <h1 className="text-2xl sm:text-6xl font-festive text-white mb-4 font-bold">
-          🪔 Happy Diwali, <span className="text-accent">{name}</span> 🪔
+          🪔 Happy Diwali, <span className="text-highlight">{name}</span> 🪔
         </h1>
         <p className="text-sm sm:text-lg text-lightGray font-semibold mb-8 text-center">
           Welcome to your ChainLabs Diwali gift page! Claim your special NFT
           gift below.
         </p>
-        {mintStatus === GIFT_STATUS.NOT_STARTED ||
-          (mintStatus === GIFT_STATUS.CHECKING && (
-            <button
-              onClick={handleClaimGift}
-              className="bg-highlight text-secondary text-base sm:text-lg font-bold py-2 sm:py-3 px-6 sm:px-8 rounded-full shadow-lg transform transition hover:scale-105 hover:shadow-2xl disabled:bg-grey-400"
-              disabled={mintStatus === GIFT_STATUS.CHECKING}
-            >
-              Claim Your Gift
-            </button>
-          ))}
+        {(mintStatus === GIFT_STATUS.NOT_STARTED ||
+          mintStatus === GIFT_STATUS.CHECKING) && (
+          <button
+            onClick={handleClaimGift}
+            className="bg-highlight text-secondary text-base sm:text-lg font-bold py-2 sm:py-3 px-6 sm:px-8 rounded-full shadow-lg transform transition hover:scale-105 hover:shadow-2xl disabled:bg-grey-400"
+            disabled={mintStatus === GIFT_STATUS.CHECKING}
+          >
+            Claim Your Gift
+          </button>
+        )}
         {mintStatus === GIFT_STATUS.FUNDING && (
           <p className="text-sm sm:text-lg text-lightGray mt-4 sm:mt-6 text-center font-semibold">
             Funding your wallet, please wait...
@@ -152,9 +152,13 @@ const Page = () => {
         )}
         {mintStatus === GIFT_STATUS.IN_PROGRESS && <ProgressBar />}
         {mintStatus === GIFT_STATUS.COMPLETED && (
-          <p className="text-sm sm:text-lg text-accent mt-6 sm:mt-8 text-center font-bold">
+          <p className="text-sm sm:text-lg text-white mt-6 sm:mt-8 text-center font-bold">
             Your gift is claimed! 🎁{" "}
-            <a href="https://opensea.io/" className="underline hover:text-highlight">
+            <a
+              href={`https://opensea.io/${wallet?.address}`}
+              className="underline hover:text-highlight"
+              target="_blank"
+            >
               View Your Gift
             </a>
           </p>
