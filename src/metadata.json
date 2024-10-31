@@ -1,0 +1,17 @@
+{
+    "name": "Diwali Celebration NFT - Happy Diwali",
+    "description": "A special Diwali greeting from Chain Labs. This vibrant NFT celebrates the festival of lights with a peaceful and traditional design, capturing the spirit of Diwali. Shared with friends, family, and clients of Chain Labs as a token of celebration and gratitude.",
+    "image": "https://cdn.chainlabs.in/IMG_6006.PNG",
+    "attributes": [
+        {
+            "trait_type": "Occasion",
+            "value": "Diwali 2024"
+        },
+        {
+            "trait_type": "Sent By",
+            "value": "Chain Labs"
+        }
+    ],
+    "external_url": "https://chainlabs.in",
+    "created_by": "Chain Labs"
+}

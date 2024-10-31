@@ -9,8 +9,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        primary: "#0D0619",
+        secondary: "#0C2F30",
+        accent: "#0AD48B",
+        highlight: "#04FFA4",
+        lightGray: "#E6E7E8",
+        festiveRed: "#E91C1C",
+        customBackground: "url('/bg.jpg')",
+      },
+      fontFamily: {
+        festive: ['"Epilogue"', "sans-serif"],
       },
     },
   },

@@ -14,11 +14,13 @@ const GIFT_STATUS = {
 };
 
 const contractAddress = "0xf9dE025Ba389114442d949c60De81C3120eE51FE";
+// const imageUri = `https://indigo-acceptable-cephalopod-251.mypinata.cloud/ipfs/QmVvncFxF1vKASazsoKNnKT8KPa8K5SGjS39iEn7eG5o7v?pinataGatewayToken=K1KboYvg7SkDPJRlA-tda19ofl3kWv3XYU7hUSIcXXRHMVrOCYwpqOPmq7uRZAHp`;
 const newTokenUri =
   "https://indigo-acceptable-cephalopod-251.mypinata.cloud/ipfs/QmNkHjZVr89VHBDkFiRsBkfSuU3ukJBptbgAu9WGN2iAUM";
 
 const Page = () => {
   const router = useRouter();
+  const { name } = router.query;
   const [wallet, setWallet] = useState<Wallet>();
   const [mintStatus, setMintStatus] = useState(GIFT_STATUS.CHECKING);
 
@@ -127,7 +129,7 @@ const Page = () => {
           className="rounded-lg mb-4 sm:w-200 sm:h-200 mt-10 sm:mt-0"
         />
         <h1 className="text-2xl sm:text-6xl font-festive text-white mb-4 font-bold">
-          🪔 Happy Diwali! 🪔
+          🪔 Happy Diwali, <span className="text-accent">{name}</span> 🪔
         </h1>
         <p className="text-sm sm:text-lg text-lightGray font-semibold mb-8 text-center">
           Welcome to your ChainLabs Diwali gift page! Claim your special NFT
@@ -152,10 +154,7 @@ const Page = () => {
         {mintStatus === GIFT_STATUS.COMPLETED && (
           <p className="text-sm sm:text-lg text-accent mt-6 sm:mt-8 text-center font-bold">
             Your gift is claimed! 🎁{" "}
-            <a
-              href="https://opensea.io/"
-              className="underline hover:text-highlight"
-            >
+            <a href="https://opensea.io/" className="underline hover:text-highlight">
               View Your Gift
             </a>
           </p>
