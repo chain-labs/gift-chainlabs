@@ -27,7 +27,9 @@ const Page = () => {
     // const mainWallet = new ethers.Wallet(`${sender_private_key}`, provider);
     const contract = new ethers.Contract(contractAddress, abi, provider);
     const hasMinted = await contract.balanceOf(userWallet?.address);
+    console.log({ hasMinted });
     if (hasMinted > 0) {
+      console.log("checking token");
       // const userWalletWithProvider = wallet?.connect(provider);
       const contract = new ethers.Contract(
         contractAddress,
@@ -196,8 +198,10 @@ const Page = () => {
 
 // Component for showing the progress bar with messages
 const ProgressBar = ({ state }: { state: string }) => {
-  const [progress, setProgress] = useState(20);
+  const [progress, setProgress] = useState(0);
   const messages = [
+    "Did you know? An NFT is like a digital collectible!, It’s one of a kind, like a special certificate just for you! You can keep it forever or even share it.",
+    "NFTs make gifts unique and memorable!",
     "Preparing your gift...",
     "Packing your gift...",
     "Adding final touches...",
@@ -206,9 +210,10 @@ const ProgressBar = ({ state }: { state: string }) => {
 
   useEffect(() => {
     if (state !== GIFT_STATUS.FUNDING) {
+      setProgress(20);
       const interval = setInterval(() => {
         setProgress((prev) => (prev < 100 ? prev + 20 : 100));
-      }, 1000);
+      }, 1500);
 
       return () => clearInterval(interval);
     }
@@ -217,7 +222,7 @@ const ProgressBar = ({ state }: { state: string }) => {
   return (
     <div className="w-full max-w-md mt-8 bg-secondary p-6 rounded-xl shadow-lg transform transition hover:scale-105 hover:shadow-2xl">
       <p className="text-lightGray mb-4 text-center font-semibold">
-        {messages[Math.floor(progress / 25)]}
+        {messages[Math.floor(progress / 20)]}
       </p>
       <div className="w-full h-4 bg-lightGray rounded-full overflow-hidden">
         <div
